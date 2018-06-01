@@ -1,4 +1,4 @@
-![LibAddonMenu-2.0r25](https://img.shields.io/badge/LibAddonMenu-2.0r25-orange.svg) ![Esoui Prov's TF page](https://img.shields.io/badge/esoui.com-Provision%27s%20TeamFormation-green.svg)
+[![LibAddonMenu-2.0r25](https://img.shields.io/badge/LibAddonMenu-2.0r25-orange.svg)](http://www.esoui.com/downloads/info7-LibAddonMenu.html) [![Esoui Prov's TF page](https://img.shields.io/badge/esoui.com-Provision%27s%20TeamFormation-green.svg)](http://www.esoui.com/downloads/info1135-ProvisionsTeamFormation.html)
 
 
 
