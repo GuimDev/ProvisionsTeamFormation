@@ -1,4 +1,4 @@
-﻿## Title: |c00C000Prov|r's |cFF9999Team|cFF0000Formation|r 1.2.6b
+## Title: |c00C000Prov|r's |cFF9999Team|cFF0000Formation|r 1.2.7
 ## Description: Affiche et gère la formation du groupe. (Show and Manage group formation)
 ## Author: |c00C000Provision|r
 ## SavedVariables: ProvTFSV
