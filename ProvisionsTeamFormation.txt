@@ -4,7 +4,7 @@
 ## SavedVariables: ProvTFSV
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0
 ## APIVersion: 100022 100023 100024
-## Version: 1.2.6b
+## Version: 1.2.7
 
 ; LibAddonMenu-2.0 r26 : A library to aid in the creation of option panels.
 libs/LibStub/LibStub.lua
