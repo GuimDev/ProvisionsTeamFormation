@@ -24,7 +24,7 @@ local function TeamFormation_reset()
 	ProvTF.vars.enabled = ProvTF.defaults.enabled
 	ProvTF.vars.posx = ProvTF.defaults.posx
 	ProvTF.vars.posy = ProvTF.defaults.posy
-	ProvTF.vars.width =ProvTF.defaults.width
+	ProvTF.vars.width = ProvTF.defaults.width
 	ProvTF.vars.height = ProvTF.defaults.height
 	ProvTF.vars.refreshRate = ProvTF.defaults.refreshRate
 	ProvTF.vars.circle =ProvTF.defaults.circle
