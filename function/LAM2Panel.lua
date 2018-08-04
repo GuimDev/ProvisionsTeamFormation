@@ -20,7 +20,6 @@ local function TeamFormation_mapJRULES()
 end
 
 local function TeamFormation_reset()
-	ProvTF.vars = {}
 	ProvTF.vars.enabled = ProvTF.defaults.enabled
 
 	ProvTF.vars.posx = ProvTF.defaults.posx
@@ -41,11 +40,10 @@ local function TeamFormation_reset()
 
 	ProvTF.vars.myAlpha = ProvTF.defaults.myAlpha
 	ProvTF.vars.roleIcon = ProvTF.defaults.roleIcon
-	
+
 	-- Don't pass default's jRules reference.
 	ProvTF.vars.jRules = {}
 	
-	ProvTF.UI:SetAnchor(CENTER, GuiRoot, CENTER, ProvTF.vars.posx, ProvTF.vars.posy)
 	TeamFormation_SetHidden(not ProvTF.vars.enabled)
 	TeamFormation_ResetRefreshRate()
 end
