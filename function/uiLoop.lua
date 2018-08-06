@@ -468,11 +468,8 @@ local function TeamFormation_uiLoop()
 			end
 
 			if not isMe then
-				if IsUnitWorldMapPositionBreadcrumbed(unitTag) then
-					ProvTF.UI.Player[i].data.isBreadcrumb = true
-				elseif not shouldShowOnCurrentMap then
-					ProvTF.UI.Player[i].data.shouldShowOnCurrentMap = shouldShowOnCurrentMap
-				end
+				ProvTF.UI.Player[i].data.isBreadcrumb = IsUnitWorldMapPositionBreadcrumbed(unitTag)
+				ProvTF.UI.Player[i].data.shouldShowOnCurrentMap = shouldShowOnCurrentMap
 			end
 
 			ProvTF.UI.Player[i]:SetHidden(false)
