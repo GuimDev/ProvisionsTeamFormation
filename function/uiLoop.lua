@@ -357,13 +357,13 @@ local function TeamFormation_GetOrder()
 	return order
 end
 
-ProvTF.lastSize = nil
+--ProvTF.nbPlayerVisible = 0
 ProvTF.numUpdate = 0
 local function inTable(tbl, item)
-    for key, value in pairs(tbl) do
-        if value == item then return key end
-    end
-    return false
+	for key, value in pairs(tbl) do
+		if value == item then return key end
+	end
+	return false
 end
 
 local function TeamFormation_uiLoop()
@@ -387,17 +387,10 @@ local function TeamFormation_uiLoop()
 		end
 	end
 
-	if ProvTF.lastSize and groupSize < ProvTF.lastSize then
-		for i = math.max(1, groupSize), ProvTF.lastSize do
-			ProvTF.UI.Player[i]:SetHidden(true)
-		end
-	end
-
 	if groupSize == 0 then
-		ProvTF.lastSize = 0
 		TeamFormation_SetHidden(true)
 		return
-	elseif ProvTF.lastSize == 0 then
+	else
 		TeamFormation_SetHidden(false)
 	end
 
@@ -408,6 +401,46 @@ local function TeamFormation_uiLoop()
 
 	for i = 1, GROUP_SIZE_MAX do
 		local unitTag = ZO_Group_GetUnitTagForGroupIndex(i)
+		local shouldShowOnCurrentMap = false
+
+		--ingame/map/worldmap.lua v100023 <https://github.com/esoui/esoui/blob/9467824ca1e63596496d85bfbc7f12ef42d7078c/esoui/ingame/map/worldmap.lua#L5764-L5796>
+		if DoesCurrentMapMatchMapForPlayerLocation() then
+			if IsGroupMemberInSameInstanceAsPlayer(groupTag) then
+				shouldShowOnCurrentMap = true
+			else
+				-- Show if in a house and house we are in doesn't have it's own (dungeon) map
+				if GetCurrentZoneHouseId() and GetMapContentType() ~= MAP_CONTENT_DUNGEON then
+					shouldShowOnCurrentMap = true
+				end
+			end
+		else
+			shouldShowOnCurrentMap = true
+		end
+
+
+		if DoesUnitExist(groupTag) and IsUnitOnline(groupTag) and not AreUnitsEqual("player", groupTag) and shouldShowOnCurrentMap then
+			local isLeader = IsUnitGroupLeader(groupTag)
+			local tagData = groupTag
+			if IsUnitWorldMapPositionBreadcrumbed(groupTag) then
+				tagData = {
+					groupTag = groupTag,
+					isBreadcrumb = true
+				}
+			end
+
+			-- >> here :
+
+
+			-- <<
+		elseif ProvTF.UI.Player[i] then
+			ProvTF.UI.Player[i]:SetHidden(true)
+		end
+
+
+
+
+
+
 		local name = GetUnitName(unitTag)
 		local x, y, heading = GetMapPlayerPosition(unitTag)
 		local zone = GetUnitZone(unitTag)
@@ -525,8 +558,6 @@ local function TeamFormation_uiLoop()
 		x, y = TeamFormation_CalculateXY(x, y)
 		TeamFormation_DrawGroupPoint(0, x, y, "/esoui/art/mappins/maprallypoint.dds")
 	end
-
-	ProvTF.lastSize = groupSize
 end
 
 function TeamFormation_OnUpdate()
