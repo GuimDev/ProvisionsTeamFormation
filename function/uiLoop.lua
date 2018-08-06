@@ -16,7 +16,6 @@ local function TeamFormation_MakeIcon(index)
 	
 	CALLBACK_MANAGER:FireCallbacks("TEAMFORMATION_MakeIcon", index)
 
-
 	if index >= 90 then return end
 	ProvTF.UI.Player[index].LifeBar = WINDOW_MANAGER:CreateControl(nil, ProvTF.UI.Player[index], CT_TEXTURE)
 	ProvTF.UI.Player[index].LifeBar:SetDimensions(24, 2)
@@ -116,7 +115,7 @@ local function TeamFormation_getDivisor() -- RangeReticle function (Author: Adei
 end
 
 local function TeamFormation_MoveIcon(index, x, y)
-	local unitTag = (index ~= 0) and ("group" .. index) or "player"
+	local unitTag = ZO_Group_GetUnitTagForGroupIndex(index)
 
 	local mx = (ProvTF.vars.width / 2)
 	local my = (ProvTF.vars.height / 2)
@@ -216,7 +215,7 @@ local function TeamFormation_CalculateXY(x, y)
 end
 
 local function TeamFormation_UpdateIcon(index, sameZone, isDead, isInCombat)
-	local unitTag = (index ~= 0) and ("group" .. index) or "player"
+	local unitTag = ZO_Group_GetUnitTagForGroupIndex(index)
 	local name = GetUnitName(unitTag)
 	local health, maxHealth, _ = GetUnitPower(unitTag, POWERTYPE_HEALTH)
 	local sizeHealthBar = zo_round(24 * health / maxHealth)
@@ -412,7 +411,7 @@ local function TeamFormation_uiLoop()
 	local zone, sameZone, dist, text, ctrl_class
 
 	for i = 1, groupSize do
-		unitTag = (i ~= 0) and ("group" .. i) or "player"
+		unitTag = ZO_Group_GetUnitTagForGroupIndex(i)
 		name = GetUnitName(unitTag)
 		x, y, heading = GetMapPlayerPosition(unitTag)
 		zone = GetUnitZone(unitTag)
