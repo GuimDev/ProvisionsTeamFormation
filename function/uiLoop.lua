@@ -345,11 +345,10 @@ end
 local function TeamFormation_GetOrder()
 	local order = {}
 	local numChildren = WINDOW_MANAGER:GetControlByName("ZO_GroupListListContents"):GetNumChildren()
-	local str, text
 	for i = 1, numChildren do
 		if WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. i .. "CharacterName") then
-			text = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. i .. "CharacterName"):GetText()
-			str = string.match(text, "^[0-9]+\. (.+)$")
+			local text = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. i .. "CharacterName"):GetText()
+			local str = string.match(text, "^[0-9]+\. (.+)$")
 			if str and str ~= "" then
 				order[i] = str
 			end
@@ -407,16 +406,13 @@ local function TeamFormation_uiLoop()
 	local fX, fY, fHeading = GetMapPlayerPosition("player")
 	local myIndex = 1
 
-	local unitTag, name, x, y, heading, xi, yi, isOnline, isMe
-	local zone, sameZone, dist, text, ctrl_class
-
-	for i = 1, groupSize do
-		unitTag = ZO_Group_GetUnitTagForGroupIndex(i)
-		name = GetUnitName(unitTag)
-		x, y, heading = GetMapPlayerPosition(unitTag)
-		zone = GetUnitZone(unitTag)
-		isOnline = IsUnitOnline(unitTag) and not (name == "" or (x == 0 and y == 0)) -- last condition prevent issue
-		isMe = AreUnitsEqual("player", unitTag)
+	for i = 1, GROUP_SIZE_MAX do
+		local unitTag = ZO_Group_GetUnitTagForGroupIndex(i)
+		local name = GetUnitName(unitTag)
+		local x, y, heading = GetMapPlayerPosition(unitTag)
+		local zone = GetUnitZone(unitTag)
+		local isOnline = IsUnitOnline(unitTag) and not (name == "" or (x == 0 and y == 0)) -- last condition prevent issue
+		local isMe = AreUnitsEqual("player", unitTag)
 
 		if ProvTF.debug.enabled and ProvTF.debug.pos.num == i and ProvTF.debug.pos.x ~= nil and not isMe then
 			x = ProvTF.debug.pos.x
@@ -440,8 +436,8 @@ local function TeamFormation_uiLoop()
 		TeamFormation_MakeIcon(i)
 
 		if isOnline then
-			xi, yi = TeamFormation_CalculateXY(x, y)
-			sameZone = GetUnitZone("player") == zone
+			local xi, yi = TeamFormation_CalculateXY(x, y)
+			local sameZone = GetUnitZone("player") == zone
 
 			if ProvTF.UI.Player[i].data.name ~= name then
 				ProvTF.UI.Player[i].data = {}
@@ -450,10 +446,12 @@ local function TeamFormation_uiLoop()
 			TeamFormation_MoveIcon(i, xi, yi)
 			TeamFormation_UpdateIcon(i, sameZone, IsUnitDead(unitTag), IsUnitInCombat(unitTag))
 
+			local text = ""
+
 			if sameZone and not isMe then
 				x = (x - fX)
 				y = (y - fY)
-				dist = math.sqrt(x * x + y * y) * 800 / TeamFormation_getDivisor() -- meter
+				local dist = math.sqrt(x * x + y * y) * 800 / TeamFormation_getDivisor() -- meter
 
 				if dist < 1000 then
 					dist = zo_round(dist)
@@ -472,7 +470,7 @@ local function TeamFormation_uiLoop()
 			if text ~= "" and inTable(ABCOrder, name) ~= false and WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "Zone") then
 				WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "Zone"):SetText(text)
 
-				ctrl_class = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "ClassIcon")
+				local ctrl_class = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "ClassIcon")
 				ctrl_class:SetColor(unpack(ProvTF.vars.jRules[name] or {1, 1, 1}))
 			end
 		end
