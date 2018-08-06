@@ -417,8 +417,9 @@ local function TeamFormation_uiLoop()
 			shouldShowOnCurrentMap = true
 		end
 
+		local isOnline = IsUnitOnline(unitTag) and not (name == "" or (x == 0 and y == 0)) -- last condition prevent issue
 
-		if DoesUnitExist(groupTag) and IsUnitOnline(groupTag) and not AreUnitsEqual("player", groupTag) and shouldShowOnCurrentMap then
+		if DoesUnitExist(groupTag) and isOnline and not AreUnitsEqual("player", groupTag) and shouldShowOnCurrentMap then
 			local isLeader = IsUnitGroupLeader(groupTag)
 			local tagData = groupTag
 			if IsUnitWorldMapPositionBreadcrumbed(groupTag) then
@@ -432,6 +433,7 @@ local function TeamFormation_uiLoop()
 
 
 			-- <<
+			ProvTF.UI.Player[i]:SetHidden(false)
 		elseif ProvTF.UI.Player[i] then
 			ProvTF.UI.Player[i]:SetHidden(true)
 		end
@@ -506,10 +508,6 @@ local function TeamFormation_uiLoop()
 				local ctrl_class = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "ClassIcon")
 				ctrl_class:SetColor(unpack(ProvTF.vars.jRules[name] or {1, 1, 1}))
 			end
-		end
-
-		if updateIsNecessary(i, "isOnline", isOnline) then
-			ProvTF.UI.Player[i]:SetHidden(not isOnline)
 		end
 
 		if isMe then
