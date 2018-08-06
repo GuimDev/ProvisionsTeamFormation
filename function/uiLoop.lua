@@ -228,11 +228,13 @@ local function TeamFormation_UpdateIcon(index, sameZone, isDead, isInCombat)
 	local updateIsNecessaryOnSameZone = updateIsNecessary(index, "sameZone", sameZone)
 	local isGroupLeader = IsUnitGroupLeader(unitTag)
 	local updateIsNecessaryOnGrLeader = updateIsNecessary(index, "isGroupLeader", isGroupLeader)
+	local updateIsNecessaryOnBreadcrumb = updateIsNecessary(index, "isBreadcrumb", ProvTF.UI.Player[index].data.isBreadcrumb)
+	local updateIsNecessaryOnSSOnCurrentMap = updateIsNecessary(index, "shouldShowOnCurrentMap", ProvTF.UI.Player[index].data.shouldShowOnCurrentMap)
 	local isMe = AreUnitsEqual("player", unitTag)
 	local r, g, b = unpack(ProvTF.vars.jRules[name] or {1, 1, 1})
 
 	-- Set Icon
-	if updateIsNecessary(index, "name", name) or updateIsNecessaryOnGrLeader or updateIsNecessaryOnDead then
+	if updateIsNecessary(index, "name", name) or updateIsNecessaryOnGrLeader or updateIsNecessaryOnDead or updateIsNecessaryOnBreadcrumb or updateIsNecessaryOnSSOnCurrentMap then
 		local class = tostring(CLASS_ID2NAME[GetUnitClassId(unitTag)])
 		ProvTF.UI.Player[index].Icon:SetColor(r, g, b, 1)
 		ProvTF.UI.Player[index].Icon:SetTextureRotation(0)
@@ -241,6 +243,14 @@ local function TeamFormation_UpdateIcon(index, sameZone, isDead, isInCombat)
 
 		if isMe then
 			ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Icons/mapkey/mapkey_player.dds")
+		elseif not ProvTF.UI.Player[index].data.shouldShowOnCurrentMap then
+			ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/LFG/LFG_tabicon_grouptools_disabled.dds")
+		elseif ProvTF.UI.Player[index].data.isBreadcrumb then
+			if isGroupLeader then
+				ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Compass/groupLeader_door.dds")
+			else
+				ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Compass/groupMember_door.dds")
+			end
 		elseif isDead then
 			local iconPath = "in"
 
@@ -264,7 +274,7 @@ local function TeamFormation_UpdateIcon(index, sameZone, isDead, isInCombat)
 			elseif isHealer then
 				role = "healer"
 			end
-			ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/lfg/lfg_" .. role .. "_up.dds")
+			ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/LFG/LFG_" .. role .. "_up.dds")
 			ProvTF.UI.Player[index].Icon:SetDimensions(32, 32)
 		elseif isGroupLeader then
 			ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Compass/groupLeader.dds")
@@ -276,14 +286,6 @@ local function TeamFormation_UpdateIcon(index, sameZone, isDead, isInCombat)
 			ProvTF.UI.Player[index].Icon:SetDimensions(16, 16)
 			ProvTF.UI.Player[index].data.name = nil
 			--d("[TF] bug n69: " .. name .. " " .. unitTag)
-		end
-
-		if ProvTF.UI.Player[index].data.isBreadcrumb then
-			if isGroupLeader then
-				ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Compass/groupLeader_door.dds")
-			else
-				ProvTF.UI.Player[index].Icon:SetTexture("/EsoUI/Art/Compass/groupMember_door.dds")
-			end
 		end
 	end
 
@@ -409,9 +411,18 @@ local function TeamFormation_uiLoop()
 
 	for i = 1, GROUP_SIZE_MAX do
 		local unitTag = ZO_Group_GetUnitTagForGroupIndex(i)
+		local name = GetUnitName(unitTag)
+		local x, y, heading = GetMapPlayerPosition(unitTag)
+		local zone = GetUnitZone(unitTag)
+		local isMe = AreUnitsEqual("player", unitTag)
+		local isOnline = DoesUnitExist(unitTag) and IsUnitOnline(unitTag) and not (name == "" or (x == 0 and y == 0)) -- last condition prevent issue
+		local isBreadcrumb = false
 		local shouldShowOnCurrentMap = false
 
-		--ingame/map/worldmap.lua v100023 <https://github.com/esoui/esoui/blob/9467824ca1e63596496d85bfbc7f12ef42d7078c/esoui/ingame/map/worldmap.lua#L5764-L5796>
+		if isMe then
+			myIndex = i
+		end
+
 		if DoesCurrentMapMatchMapForPlayerLocation() then
 			if IsGroupMemberInSameInstanceAsPlayer(unitTag) then
 				shouldShowOnCurrentMap = true
@@ -425,23 +436,14 @@ local function TeamFormation_uiLoop()
 			shouldShowOnCurrentMap = true
 		end
 
-		local name = GetUnitName(unitTag)
-		local x, y, heading = GetMapPlayerPosition(unitTag)
-		local zone = GetUnitZone(unitTag)
-		local isOnline = IsUnitOnline(unitTag) and not (name == "" or (x == 0 and y == 0)) -- last condition prevent issue
-		local isMe = AreUnitsEqual("player", unitTag)
-
-		if isMe then
-			myIndex = i
-		end
-
 		if ProvTF.debug.enabled and ProvTF.debug.pos.num == i and ProvTF.debug.pos.x ~= nil and not isMe then
 			x = ProvTF.debug.pos.x
 			y = ProvTF.debug.pos.y
 			zone = ProvTF.debug.pos.zone
 			heading = ProvTF.debug.pos.heading
-			shouldShowOnCurrentMap = true
 			isOnline = true
+			isBreadcrumb = false
+			shouldShowOnCurrentMap = true
 
 			--[[ debug
 			if ProvTF.debug.enabled and ProvTF.debug.pos.num == i and ProvTF.debug.pos.x ~= nil and not isMe then
@@ -455,7 +457,7 @@ local function TeamFormation_uiLoop()
 			--]]
 		end
 
-		if DoesUnitExist(unitTag) and isOnline and shouldShowOnCurrentMap then
+		if isOnline then
 			local xi, yi = TeamFormation_CalculateXY(x, y)
 			local sameZone = GetUnitZone("player") == zone
 
@@ -465,12 +467,17 @@ local function TeamFormation_uiLoop()
 				ProvTF.UI.Player[i].data = {}
 			end
 
+			if not isMe then
+				if IsUnitWorldMapPositionBreadcrumbed(unitTag) then
+					ProvTF.UI.Player[i].data.isBreadcrumb = true
+				elseif not shouldShowOnCurrentMap then
+					ProvTF.UI.Player[i].data.shouldShowOnCurrentMap = shouldShowOnCurrentMap
+				end
+			end
+
+			ProvTF.UI.Player[i]:SetHidden(false)
 			TeamFormation_MoveIcon(i, xi, yi)
 			TeamFormation_UpdateIcon(i, sameZone, IsUnitDead(unitTag), IsUnitInCombat(unitTag))
-
-			if not isMe and IsUnitWorldMapPositionBreadcrumbed(unitTag) then
-				ProvTF.UI.Player[i].data.isBreadcrumb = true
-			end
 
 			local text = ""
 
@@ -499,8 +506,6 @@ local function TeamFormation_uiLoop()
 				local ctrl_class = WINDOW_MANAGER:GetControlByName("ZO_GroupListList1Row" .. inTable(ABCOrder, name) .. "ClassIcon")
 				ctrl_class:SetColor(unpack(ProvTF.vars.jRules[name] or {1, 1, 1}))
 			end
-
-			ProvTF.UI.Player[i]:SetHidden(false)
 		elseif ProvTF.UI.Player[i] then
 			ProvTF.UI.Player[i]:SetHidden(true)
 		end
