@@ -12,14 +12,18 @@ TeamFormation is a user Interface for The Elder Scrolls Online, designed to show
 
 Unofficial version Changelog:
 
-- Group Lead (crown) will take priority over group role
-- Adjust custom player colors to enable use of @names in addition to character names (character name settings will override @name settings)
-- Increase Group Lead icon size slightly
-- Add Necro and Arcanist Icons
-- Rudimentary Target Marker suppoort. Target Markers will take priority over role or class icons but not group leader.
+- Add Necromancer and Arcanist Icons
+- Shift icon assignment priority so group lead (crown) will take priority over group role
+- Adjust custom player color assignment to enable use of @NAMEs in addition to character names (character name settings will override @name settings)
+- Increase Group Lead icon size slightly (to do: add custom scaling settings)
+- Target Marker support for Target Markers applied to grouped players. (Target Markers will take priority over role or class icons but not group leader icon.)
 - Added Alpha settings for Group Leader, Role, Class, and Target Marker icons
+- Hid random map pins created by other addons
+- Update API version to 101038 (Necrom)
+- Update version number to 1.3.4
 
-(Note: this version also incorporates the changes made by theviper121's version 1.3.2 in https://www.esoui.com/downloads/info3526-ProvisionsTeamFormationTeammateRadartheviper121.html)
+
+(Note: this version also incorporates the changes made by [theviper121's version 1.3.2](https://www.esoui.com/downloads/info3526-ProvisionsTeamFormationTeammateRadartheviper121.html))
 
 # Presentation
 
