@@ -1,4 +1,4 @@
-﻿ZO_CreateStringId("SI_TF_NAME_TEAMFORMATION", "|c00C000Provision|r's |cFF9999Team|cFF0000Formation|r")
+ZO_CreateStringId("SI_TF_NAME_TEAMFORMATION", "|c00C000Provision|r's |cFF9999Team|cFF0000Formation|r")
 ZO_CreateStringId("SI_TF_DESC_TEAMFORMATION", "TeamFormation zeigt die Formation des Teams an. Besonders nützlich bei einer Gruppengröße von 4+")
 
 ZO_CreateStringId("SI_BINDING_NAME_TEAMFORMATION", "|cFF9999Team|cFF0000Formation|r")
@@ -52,6 +52,14 @@ ZO_CreateStringId("SI_TF_SETTING_YOURALPHA", "Spieler Pfeil Transparenz")
 ZO_CreateStringId("SI_TF_SETTING_YOURALPHA_TOOLTIP", "0 = Versteckt\nVerändere die Transparenz des Spieler Pfeils (blauer Pfeil).")
 ZO_CreateStringId("SI_TF_SETTING_ROLE", "Rollen Symbol")
 ZO_CreateStringId("SI_TF_SETTING_ROLE_TOOLTIP", "Zeigt das Rollen Symbol anstelle des Klassen Symols.")
+ZO_CreateStringId("SI_TF_SETTING_ROLEALPHA", "Deckkraft der Rollensymbole")
+ZO_CreateStringId("SI_TF_SETTING_ROLEALPHA_TOOLTIP", "0 = Versteckt\nÄndert die Transparenz von Rollensymbolen.")
+ZO_CreateStringId("SI_TF_SETTING_GROUPLEADERALPHA", "Deckkraft des Gruppenleitersymbols")
+ZO_CreateStringId("SI_TF_SETTING_GROUPLEADERALPHA_TOOLTIP", "0 = Versteckt\nÄndert die Transparenz des Gruppenleitersymbols.")
+ZO_CreateStringId("SI_TF_SETTING_CLASSALPHA", "Deckkraft der Klassensymbole")
+ZO_CreateStringId("SI_TF_SETTING_CLASSALPHA_TOOLTIP", "0 = Versteckt\nÄndert die Transparenz von Klassensymbolen.")
+ZO_CreateStringId("SI_TF_SETTING_TARGETMARKERALPHA", "Deckkraft der Zielmarkierungen")
+ZO_CreateStringId("SI_TF_SETTING_TARGETMARKERALPHA_TOOLTIP", "0 = Versteckt\nÄndert die Transparenz von Zielmarkierungen.")
 
 ZO_CreateStringId("SI_TF_SETTING_HRADDON", "Passe die Farbe der Symbole mit den folgenden Parametern an.");
 

@@ -1,6 +1,13 @@
 local function colorizePseudo(rgb, pseudo)
 	local color = ZO_ColorDef:New(unpack(rgb))
-	return "|c" .. color:ToHex() .. "|t24:24:EsoUI/Art/Miscellaneous/Gamepad/gp_charNameIcon.dds:inheritcolor|t " .. pseudo
+	local icon = "EsoUI/Art/Miscellaneous/Gamepad/gp_charNameIcon.dds"
+	if pseudo:find("role_") then
+		local role = pseudo:gsub("role_", "")
+		if role == "healer" or role == "dps" or role == "tank" then
+		 icon = "EsoUI/Art/LFG/LFG_" .. role .. "_up.dds"
+		end
+	end
+	return "|c" .. color:ToHex() .. "|t24:24:" .. icon .. ":inheritcolor|t " .. pseudo
 end
 
 local function TeamFormation_mapChoices(func, array)
@@ -40,6 +47,10 @@ local function TeamFormation_reset()
 	ProvTF.vars.siege = ProvTF.defaults.siege
 
 	ProvTF.vars.myAlpha = ProvTF.defaults.myAlpha
+	ProvTF.vars.groupLeaderAlpha = ProvTF.defaults.groupLeaderAlpha
+	ProvTF.vars.targetMarkerAlpha = ProvTF.defaults.targetMarkerAlpha
+	ProvTF.vars.roleAlpha = ProvTF.defaults.roleAlpha
+	ProvTF.vars.classAlpha = ProvTF.defaults.classAlpha
 	ProvTF.vars.roleIcon = ProvTF.defaults.roleIcon
 	
 	-- Don't pass default's jRules reference.
@@ -258,6 +269,16 @@ function TeamFormation_createLAM2Panel()
 					text = GetString(SI_TF_SETTING_PLAYERICON_TOOLTIP),
 				},
 				[2] = {
+					type = "checkbox",
+					name = GetString(SI_TF_SETTING_ROLE),
+					tooltip = GetString(SI_TF_SETTING_ROLE_TOOLTIP),
+					getFunc = function() return ProvTF.vars.roleIcon end,
+					setFunc = function(value)
+						ProvTF.vars.roleIcon = value
+					end,
+					width = "full",
+				},
+				[3] = {
 					type = "slider",
 					name = GetString(SI_TF_SETTING_YOURALPHA) .. " (%)",
 					tooltip = GetString(SI_TF_SETTING_YOURALPHA_TOOLTIP),
@@ -268,13 +289,47 @@ function TeamFormation_createLAM2Panel()
 					end,
 					width = "full",
 				},
-				[3] = {
-					type = "checkbox",
-					name = GetString(SI_TF_SETTING_ROLE),
-					tooltip = GetString(SI_TF_SETTING_ROLE_TOOLTIP),
-					getFunc = function() return ProvTF.vars.roleIcon end,
+				[4] = {
+					type = "slider",
+					name = GetString(SI_TF_SETTING_GROUPLEADERALPHA) .. " (%)",
+					tooltip = GetString(SI_TF_SETTING_SI_TF_SETTING_GROUPLEADERALPHA_TOOLTIP),
+					min = 0, max = 100, step = 1,
+					getFunc = function() return ProvTF.vars.groupLeaderAlpha * 100 end,
 					setFunc = function(value)
-						ProvTF.vars.roleIcon = value
+						ProvTF.vars.groupLeaderAlpha = value / 100
+					end,
+					width = "full",
+				},
+				[5] = {
+					type = "slider",
+					name = GetString(SI_TF_SETTING_TARGETMARKERALPHA) .. " (%)",
+					tooltip = GetString(SI_TF_SETTING_TARGETMARKERALPHA_TOOLTIP),
+					min = 0, max = 100, step = 1,
+					getFunc = function() return ProvTF.vars.targetMarkerAlpha * 100 end,
+					setFunc = function(value)
+						ProvTF.vars.targetMarkerAlpha = value / 100
+					end,
+					width = "full",
+				},
+				[6] = {
+					type = "slider",
+					name = GetString(SI_TF_SETTING_ROLEALPHA) .. " (%)",
+					tooltip = GetString(SI_TF_SETTING_ROLEALPHA_TOOLTIP),
+					min = 0, max = 100, step = 1,
+					getFunc = function() return ProvTF.vars.roleAlpha * 100 end,
+					setFunc = function(value)
+						ProvTF.vars.roleAlpha = value / 100
+					end,
+					width = "full",
+				},
+				[7] = {
+					type = "slider",
+					name = GetString(SI_TF_SETTING_CLASSALPHA) .. " (%)",
+					tooltip = GetString(SI_TF_SETTING_CLASSALPHA_TOOLTIP),
+					min = 0, max = 100, step = 1,
+					getFunc = function() return ProvTF.vars.classAlpha * 100 end,
+					setFunc = function(value)
+						ProvTF.vars.classAlpha = value / 100
 					end,
 					width = "full",
 				},
@@ -295,25 +350,35 @@ function TeamFormation_createLAM2Panel()
 				},
 				[2] = {
 					type = "description",
+					text = GetString(SI_TF_SETTING_COLOROPTIONS_TOOLTIP2),
+				},
+				[3] = {
+					type = "description",
 					text = GetString(SI_TF_SETTING_COLORRESET_TOOLTIP),
 					width = "half",
 				},
-				[3] = {
+				[4] = {
 					type = "button",
 					name = GetString(SI_TF_SETTING_COLORRESET),
 					tooltip = GetString(SI_TF_SETTING_COLORRESET_TOOLTIP),
 					func = function()
-						ProvTF.vars.jRules = {}
+						local ctrl_dropdown = WINDOW_MANAGER:GetControlByName("ProvTF#jRulesList")
+						local selected = ctrl_dropdown.combobox.m_comboBox:GetSelectedItem()
+						if selected ~= "" then
+							local pseudo = string.match(selected, "^.+\|t (.+)$")
+							ProvTF.vars.jRules[pseudo] = nil
+						end
 						WINDOW_MANAGER:GetControlByName("ProvTF#jRulesList"):UpdateChoices({})
+						ctrl_dropdown:UpdateChoices(TeamFormation_mapJRULES())
 					end,
 					width = "half"
 				},
-				[4] = {
+				[5] = {
 					type = "header",
 					name = GetString(SI_TF_SETTING_JRULES),
 					width = "full",
 				},
-				[5] = {
+				[6] = {
 					type = "editbox",
 					name = GetString(SI_TF_SETTING_JRULES_PSEUDOADD), -- or string id or function returning a string
 					tooltip = GetString(SI_TF_SETTING_JRULES_PSEUDOADD_TOOLTIP),
@@ -337,7 +402,7 @@ function TeamFormation_createLAM2Panel()
 					width = "full",
 					reference = "ProvTF#jRulesBox",
 				},
-				[6] = {
+				[7] = {
 					type = "button",
 					name = GetString(SI_TF_SETTING_JRULES_ADD),
 					tooltip = GetString(SI_TF_SETTING_JRULES_PSEUDOADD_TOOLTIP),
@@ -356,7 +421,7 @@ function TeamFormation_createLAM2Panel()
 					end,
 					width = "half",
 				},
-				[7] = {
+				[8] = {
 					type = "slider",
 					name = GetString(SI_TF_SETTING_JRULES_PICKPSEUDO),
 					tooltip = GetString(SI_TF_SETTING_JRULES_PICKPSEUDO_TOOLTIP),
@@ -375,7 +440,7 @@ function TeamFormation_createLAM2Panel()
 					width = "half",
 					disabled = function() return not IsUnitGrouped("player") end,
 				},
-				[8] = {
+				[9] = {
 					type = "dropdown",
 					name = GetString(SI_TF_SETTING_JRULES_PSEUDOCHOICE),
 					tooltip = GetString(SI_TF_SETTING_JRULES_PSEUDOCHOICE_TOOLTIP),
@@ -388,7 +453,7 @@ function TeamFormation_createLAM2Panel()
 					width = "half",
 					reference = "ProvTF#jRulesList",
 				},
-				[9] = {
+				[10] = {
 					type = "colorpicker",
 					name = GetString(SI_TF_SETTING_JRULES_COLORCHOICE) .. " (RGB)",
 					tooltip = GetString(SI_TF_SETTING_JRULES_COLORCHOICE_TOOLTIP),
@@ -423,7 +488,7 @@ function TeamFormation_createLAM2Panel()
 						return selected == ""
 					end,
 				},
-				[10] = {
+				[11] = {
 					type = "slider",
 					name = GetString(SI_TF_SETTING_JRULES_COLORCHOICE) .. " (HSL)",
 					tooltip = GetString(SI_TF_SETTING_JRULES_COLORCHOICE_TOOLTIP),
