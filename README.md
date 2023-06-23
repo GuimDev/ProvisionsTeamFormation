@@ -1,11 +1,25 @@
-ProvisionsTeamFormation 1.3.1b
+ProvisionsTeamFormation 1.3.4
 =============
+
 
 TeamFormation is a user Interface for The Elder Scrolls Online, designed to show the positions and health of your teammates, like a radar.
 
 *I'm happy to share my addon with you, but please **don't make a fork on esoui or curse** without my authorization.*
 
 [![LibAddonMenu-2.0r26](https://img.shields.io/badge/LibAddonMenu-2.0r26-orange.svg)](http://www.esoui.com/downloads/info7-LibAddonMenu.html) [![Esoui Prov's TF page](https://img.shields.io/badge/esoui.com-Provision%27s%20TeamFormation-green.svg)](http://www.esoui.com/downloads/info1135-ProvisionsTeamFormation.html)
+
+# 1.3.4 Changelog
+
+Unofficial version Changelog:
+
+- Group Lead (crown) will take priority over group role
+- Adjust custom player colors to enable use of @names in addition to character names (character name settings will override @name settings)
+- Increase Group Lead icon size slightly
+- Add Necro and Arcanist Icons
+- Rudimentary Target Marker suppoort. Target Markers will take priority over role or class icons but not group leader.
+- Added Alpha settings for Group Leader, Role, Class, and Target Marker icons
+
+(Note: this version also incorporates the changes made by theviper121's version 1.3.2 in https://www.esoui.com/downloads/info3526-ProvisionsTeamFormationTeammateRadartheviper121.html)
 
 # Presentation
 
