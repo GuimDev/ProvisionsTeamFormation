@@ -4,7 +4,7 @@ ProvTF =
 	namePublic = "Prov's TeamFormation",
 	nameColor = "|cFF9999Team|cFF0000Formation|r",
 	author = "|c00C000Provision|r",
-	version = "1.3.1b", --3 endroits
+	version = "1.3.4", --3 endroits
 	CPL = nil,
 	defaults =
 	{ --Don't forget header.lua
@@ -27,7 +27,11 @@ ProvTF =
 		siege		= true,
 
 		myAlpha 	= .72,
-		roleIcon	= false,
+		groupLeaderAlpha = .72,
+		targetMarkerAlpha = .6,
+		roleAlpha         = .6,
+		classAlpha = .6,
+		roleIcon          = false,
 
 		jRules		= {},
 	},
@@ -43,12 +47,25 @@ ProvTF =
 	}
 }
 
-CLASS_ID2NAME = {
-	[1] = 'Dragonknight',
-	[2] = 'Sorcerer',
-	[3] = 'Nightblade',
-	[4] = 'Warden',
-	[6] = 'Templar',
+ProvTF.CLASS_ID2NAME = {
+	[1] = 'dragonknight',
+	[2] = 'sorcerer',
+	[3] = 'nightblade',
+    [4] = 'warden',
+    [5] = 'necromancer',
+    [6] = 'templar',
+	[117] = "arcanist"
 }
 
-LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
+ProvTF.TARGET_MARKER_PATHS = {
+	[TARGET_MARKER_TYPE_ONE] = "/EsoUI/Art/TargetMarkers/Target_Blue_Square_64.dds",
+	[TARGET_MARKER_TYPE_TWO] = "/EsoUI/Art/TargetMarkers/Target_Gold_Star_64.dds",
+	[TARGET_MARKER_TYPE_THREE] = "/EsoUI/Art/TargetMarkers/Target_Green_Circle_64.dds",
+	[TARGET_MARKER_TYPE_FOUR] = "/EsoUI/Art/TargetMarkers/Target_Orange_Triangle_64.dds",
+	[TARGET_MARKER_TYPE_FIVE] = "/EsoUI/Art/TargetMarkers/Target_Pink_Moons_64.dds",
+	[TARGET_MARKER_TYPE_SIX] = "/EsoUI/Art/TargetMarkers/Target_Purple_Oblivion_64.dds",
+	[TARGET_MARKER_TYPE_SEVEN] = "/EsoUI/Art/TargetMarkers/Target_Red_Weapons_64.dds",
+	[TARGET_MARKER_TYPE_EIGHT] = "/EsoUI/Art/TargetMarkers/Target_White_Skull_64.dds",
+}
+
+LAM2 = LibAddonMenu2

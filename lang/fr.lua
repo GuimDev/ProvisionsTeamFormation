@@ -52,6 +52,14 @@ ZO_CreateStringId("SI_TF_SETTING_YOURALPHA", "Transparence de la flèche du joue
 ZO_CreateStringId("SI_TF_SETTING_YOURALPHA_TOOLTIP", "0 = Masqué\nModifie la transparence de votre point (flèche bleue).")
 ZO_CreateStringId("SI_TF_SETTING_ROLE", "Afficher le rôle")
 ZO_CreateStringId("SI_TF_SETTING_ROLE_TOOLTIP", "Affiche le rôle au lieu de l'icone de classe.")
+ZO_CreateStringId("SI_TF_SETTING_ROLEALPHA", "Opacité des icônes de rôle")
+ZO_CreateStringId("SI_TF_SETTING_ROLEALPHA_TOOLTIP", "0 = Masqué\nModifie la transparence des icônes de rôle.")
+ZO_CreateStringId("SI_TF_SETTING_GROUPLEADERALPHA", "Opacité de l'icône du chef de groupe")
+ZO_CreateStringId("SI_TF_SETTING_GROUPLEADERALPHA_TOOLTIP", "0 = Masqué\nModifie la transparence de l'icône du chef de groupe.")
+ZO_CreateStringId("SI_TF_SETTING_CLASSALPHA", "Opacité des icônes de classe")
+ZO_CreateStringId("SI_TF_SETTING_CLASSALPHA_TOOLTIP", "0 = Masqué\nModifie la transparence des icônes de classe.")
+ZO_CreateStringId("SI_TF_SETTING_TARGETMARKERALPHA", "Opacité des marqueurs de cible")
+ZO_CreateStringId("SI_TF_SETTING_TARGETMARKERALPHA_TOOLTIP", "0 = Masqué\nModifie la transparence des marqueurs de cible.")
 
 ZO_CreateStringId("SI_TF_SETTING_HRADDON", "[NOUVEAU] Personnaliser vos icônes avec le paramètre suivant.");
 
